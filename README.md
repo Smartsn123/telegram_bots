@@ -20,10 +20,21 @@ def check_yarn_status():
             bot_name = "yarn_bot" , 
             message = "Queue Resource Alert: Queue is "+str(current_capacity)+"% used"
         )
-
+        
+def push_image():
+    update_on_telegram(channel='axlds_alerts', 
+                       bot_name='axlds_bot',
+                       message='',
+                       file_name='sample.png')
+                       
+check_yarn_status()
+push_image()
 
 ```
 
 
 ![Pushing spark job alerts and Queue capacity logs to telegram](https://github.com/Smartsn123/telegram_bots/blob/master/telegram_bot_2.png)
+
+
+![Pushing images](https://github.com/Smartsn123/telegram_bots/blob/master/telegram_bot_3.png)
 
