@@ -10,10 +10,11 @@ def update_on_telegram(channel, bot_name, message, file_name=None, user=''):
     """
 
     bot_config = {
-        "proxy_uid": "***",
-        "proxy_pswd": "***",
-        "proxy_host": "***",
-        "proxy_port": "*****",
+        "proxy_uid": "",
+        "proxy_pswd": "",
+        "proxy_host": "",
+        "proxy_port": "",
+        # Leave above empty if you are not behind proxy
         "BOT_TOKENS": {"my_bot": "---"},  # add bot name with bot token
         "CHAT_IDS": {"my_channel1": {"my_bot1": "chat_id1"}, 
                      "my_channel2": {"my_bot2": "chat_id2"}
@@ -37,20 +38,27 @@ def update_on_telegram(channel, bot_name, message, file_name=None, user=''):
             print("JOB_LOG, could not determine chat id please check config ")
             return
 
-        if not (bot_config and proxy_user and proxy_pswd and proxy_host and proxy_port and bot_token):
+        if not (bot_config and bot_token):
             print("JOB_LOG, error in bot config file couldnt send message ")
             return
         else:
             print(bot_config, proxy_user, proxy_pswd, proxy_host, proxy_port, bot_token)
-
-        http_proxy = "http://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
-        https_proxy = "https://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
-        ftp_proxy = "ftp://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
-        proxyDict = {
-            "http": http_proxy,
-            "https": https_proxy,
-            "ftp": ftp_proxy
-        }
+        
+        if  proxy_user and proxy_pswd and proxy_host and proxy_port :
+            http_proxy = "http://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
+            https_proxy = "https://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
+            ftp_proxy = "ftp://{}:{}@{}:{}".format(proxy_user, proxy_pswd, proxy_host, proxy_port)
+            proxyDict = {
+                "http": http_proxy,
+                "https": https_proxy,
+                "ftp": ftp_proxy
+            }
+            proxy = urllib2.ProxyHandler(proxyDict)
+            opener = urllib2.build_opener(proxy)
+            urllib2.install_opener(opener)
+        else:
+            proxyDict = {}
+            
         headers = {"Content-Type": "application/json"}
         url = "https://api.telegram.org/bot{}/sendMessage".format(bot_token)
         body = {"chat_id": "{}".format(chat_id),
@@ -58,10 +66,6 @@ def update_on_telegram(channel, bot_name, message, file_name=None, user=''):
                 "parse_mode": "html",
                 "disable_notification": True
                 }
-
-        proxy = urllib2.ProxyHandler(proxyDict)
-        opener = urllib2.build_opener(proxy)
-        urllib2.install_opener(opener)
 
         if file_name:
             file_type = 'photo' if file_name.split('.')[-1].lower() in ['.png', '.jpg', '.jpeg'] else 'document'
