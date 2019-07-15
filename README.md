@@ -25,5 +25,5 @@ def check_yarn_status():
 ```
 
 
-![Image description](link-to-image)
+![Pushing spark job alerts and Queue capacity logs to telegram](https://github.com/Smartsn123/telegram_bots/blob/master/telegram_bot_2.png)
 
