@@ -25,5 +25,5 @@ def check_yarn_status():
 ```
 
 
-
+![Image description](link-to-image)
 
